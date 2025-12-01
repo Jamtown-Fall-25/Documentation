@@ -1,18 +1,17 @@
-# Automated Outreach Strategy Workstream
+Automated Outreach Strategy Workstream
 ## Final Project Documentation
    
 **Project:** Jamtown Artist Outreach Automation Initiative  
 **Workstream:** Automated Outreach Strategy (AOS)  
 **Duration:** September 30, 2024 – December 1, 2024  
-**Status:** **Complete**
 
 ---
 
 ## Executive Summary
 
-The **Automated Outreach Strategy** workstream was designed to automate Jamtown's artist acquisition process, enabling efficient outreach to potential artist partners without requiring manual effort at scale. The core objective was to develop a systematic, scalable approach to discover, identify, and contact emerging and mid-tier artists across the United States, thereby expanding Jamtown's artist community and increasing brand awareness among the target demographic.
+The **Automated Outreach Strategy** workstream was designed to automate Jamtown's artist acquisition process, enabling efficient outreach to potential artist partners without requiring manual effort at scale. The core objective was to develop a systematic, scalable approach to discover, identify, and contact mid to large-tier artists across the United States, thereby expanding Jamtown's artist community and increasing brand awareness among the target demographic.
 
-This workstream serves a critical function within the overall Jamtown project ecosystem: it acts as the **acquisition engine** that sources new artist partners and generates the foundational data required for downstream AI matching algorithms. By automating the artist discovery and initial outreach pipeline, this workstream directly enables Jamtown to populate its database with artist profiles (including bio, interests, causes, and performance preferences), which the AI workstream then leverages to match artists with nonprofit event opportunities. Ultimately, the AOS workstream is instrumental in achieving Jamtown's mission of connecting independent and emerging artists with meaningful performance stages while simultaneously building a rich, validated artist dataset that powers the platform's intelligent matching capabilities.
+This workstream serves a critical function within the overall Jamtown project ecosystem: it acts as the **acquisition engine** that sources new artist partners to aid Jamtown’s expansion and gather the foundational data required for downstream AI matching algorithms. By automating the artist discovery and initial outreach pipeline, this workstream directly enables Jamtown to populate its database with artist profiles (including bio, interests, causes, and performance preferences), which the AI workstream then leverages to match artists with nonprofit event opportunities. Ultimately, the AOS workstream is essential in achieving Jamtown's mission of connecting artists with meaningful performance stages while simultaneously building a validated artist dataset that enables the AI’s matching capabilities.
 
 ---
 
@@ -25,16 +24,6 @@ This workstream serves a critical function within the overall Jamtown project ec
 3. **Implement automated outreach infrastructure** that enables direct, personalized communication with target artists via Instagram Direct Messages.
 4. **Generate a validated, segmented artist database** that feeds directly into the Jamtown platform and AI matching engine, with artists pre-qualified by geography and audience size.
 
-### Key Performance Indicators (KPIs)
-
-The success of this workstream will be measured by the following metrics:
-
-- **Response Rate (%)**: Percentage of artists who respond to initial outreach messages.
-- **Sign-Up Conversion Rate (%)**: Percentage of respondents who complete the artist profile signup and join the Jamtown talent community.
-- **Database Entries Per Week**: Number of new, validated artist profiles added to the Jamtown database per week.
-- **Data Quality Score**: Percentage of artist records with complete information (bio, causes, contact info, social links) ready for AI processing.
-- **Geographic Coverage**: Number of qualified artists by state/region to ensure national representation.
-
 ---
 
 ## 2. Process & Methodology
@@ -43,22 +32,13 @@ The Automated Outreach Strategy was developed across five distinct phases, each 
 
 ### Phase 1: Scope & Outline of Workstreams (Week 1 | Sept 30 – Oct 6)
 
-**Objective:** Define the AOS workstream's role within the broader Jamtown project and establish technical and operational boundaries.
+**Objective:** Define the AOS workstream's role within the broader Jamtown project and establish achievable goals.
 
 **Activities:**
-- Stakeholder alignment meetings to clarify AOS dependencies with AI and SEO workstreams.
 - Defined data requirements: artist profiles needed by AI workstream (bio, causes, performance preferences, social links).
 - Identified bottlenecks in manual outreach and quantified the need for automation.
-- Established success criteria and KPI framework.
 
-**Key Outputs:**
-- Workstream charter and objective document.
-- Data schema specification for artist profiles.
-- Integration requirements for the Framer website database and AI platform.
-
----
-
-### Phase 2: Research – Ways to Obtain Artist Information (Week 2 | Oct 7 – Oct 13)
+### Phase 2: Research Ways to Obtain Artist Information (Week 2 | Oct 7 – Oct 13)
 
 **Objective:** Evaluate all viable approaches to artist data collection and select the most scalable, ethical, and cost-effective solution.
 
@@ -70,27 +50,20 @@ The Automated Outreach Strategy was developed across five distinct phases, each 
 - **Conclusion:** Official API alone insufficient; alternative data sources required.
 
 #### Investigation: Web Scraping Approaches
-- Researched direct Spotify website scraping using Selenium and Playwright.
+- Researched the direct Spotify website scraping
 - **Finding:** While technically feasible, large-scale web scraping of Spotify violates their Terms of Service and raises ethical and legal concerns regarding data ownership and artist privacy.
-- **Conclusion:** Ethical concerns and ToS violations ruled out as primary approach.
+- **Conclusion:** Ethical concerns and ToS violations ruled out as the primary approach.
 
 #### Investigation: Third-Party Data Aggregators
 - Evaluated commercial music industry databases and artist platforms.
 - **Finding:** Cost-prohibitive for startup; limited coverage of emerging/independent artists; inflexible data structures.
 
 #### Hybrid Solution: Artist URL Scraping + Instagram Enrichment
-- **Proposed Approach:** Scrape Spotify artist profile URLs (which are public, static, and not rate-limited) using headless browser automation, then use a dedicated Instagram scraper (Apify) to extract contact and audience data from artist Instagram profiles.
+- **Proposed Approach:** Scrape Spotify artist profile URLs (which are public, static, and not rate-limited) using Python automation, then use a dedicated Instagram scraper (Apify) to extract contact and audience data from artist Instagram profiles.
 - **Rationale:** Artist profile URLs are public metadata; Instagram profiles contain the contact, bio, and audience information needed for outreach and AI matching. This approach respects Spotify's ToS while ethically sourcing public artist information.
 - **Conclusion:** Selected as primary approach.
 
-**Key Outputs:**
-- Comparative analysis report of data collection approaches.
-- Technical feasibility assessment: Playwright-based URL scraper + Apify Instagram enrichment.
-- Risk mitigation strategy for ethical data collection and artist privacy.
-
----
-
-### Phase 3: Development – Algorithmic Artist Information Pipeline (Weeks 3–4 | Oct 14 – Oct 27)
+### Phase 3: Development of Algorithmic Artist Information Pipeline (Weeks 3–4 | Oct 14 – Oct 27)
 
 **Objective:** Build and validate the core technical infrastructure for discovering and enriching artist data at scale.
 
@@ -102,84 +75,33 @@ The Automated Outreach Strategy was developed across five distinct phases, each 
 - Supporting Libraries: Pandas (data manipulation), standard file I/O
 
 **Architecture & Approach:**
-
 The `discover_artists.py` script implements a distributed, resumable web scraper that discovers Spotify artist profile URLs without using the official API:
 
-1. **Query Planning:** Generates a diverse search query space (artist names, genre terms, trending keywords) to maximize coverage of the artist ecosystem.
+1. **Query Planning:** Generates randomized letter-string seeds to probe Spotify’s search space and maximize discovery of new artists.
 2. **Distributed Crawling:** Spawns multiple Playwright browser contexts (default: 6 workers) that run in parallel, each independently querying Spotify search results.
 3. **URL Extraction & Deduplication:** Each worker scrolls through search result pages, extracting artist profile URLs and persisting them to a shared `urls.txt` file with automatic deduplication.
 4. **Resumable Execution:** Tracks progress between runs; can resume from a prior checkpoint or start fresh with the `--fresh` flag.
 5. **Resilience:** Automatically handles transient network errors and Spotify rate-limiting; logs per-worker progress and warnings.
 
-**Key Technical Parameters:**
-
-| Parameter | Description | Default |
-| --- | --- | --- |
-| `--workers` | Number of parallel Playwright contexts | 6 |
-| `--count` | Target number of unique artist URLs to discover | 1,000 |
-| `--per-query-target` | Stop scrolling once this many new artists found per search term | Tuned per environment |
-| `--max-scrolls` | Maximum number of result pages to scroll per query | Tuned per environment |
-| `--scroll-pause-ms` | Pause duration between scroll actions (ms) | Tuned per environment |
-| `--fresh` | Ignore existing `urls.txt` and start fresh | False (resume by default) |
-
-**Execution:**
-```bash
-python discover_artists.py --count 100000 --fresh
-```
-
-**Outcome (Jamtown Project):**
+**Outcome:**
 - Discovered and validated **100,000 artist profile URLs** from Spotify.
 - Stored in `urls.txt` for downstream processing.
 
 ---
 
-#### 3B. Data Filtering & Segmentation
-
-**Objective:** Prepare the artist URL dataset for Instagram enrichment by applying geographic and audience-size filters.
-
-**Process:**
-
-1. **Data Loading:** Read the full `urls.txt` into a Pandas DataFrame.
-2. **Geographic Filtering:** Cross-reference artist profile metadata (Spotify API for country/region) to retain only **United States–based artists**.
-3. **Audience Segmentation:** Apply sorting and filtering algorithms to identify emerging/mid-tier artists:
-   - **Lower Bound:** Minimum 500 Spotify followers, 5,000 monthly listeners (filters out inactive/spam profiles).
-   - **Upper Bound:** Maximum 100,000 Spotify followers, 1,000,000 monthly listeners (excludes major label artists with established PR teams; targets emerging independent artists).
-4. **Validation:** Detect and flag duplicate or invalid URLs; remove corrupted records.
-
-**Outcome:**
-- Refined dataset of ~50,000–80,000 US-based, emerging/mid-tier artists ready for Instagram enrichment.
-
-**Rationale for Audience Thresholds:**
-- **Lower Bounds:** Artists below these thresholds often lack professional presence or active social engagement; outreach is unlikely to succeed.
-- **Upper Bounds:** Artists above these thresholds typically have management teams, formal booking processes, and professional outreach channels; direct DM outreach is less effective and may be perceived as unprofessional.
-
----
-
 ### Phase 4: Testing – Apify Instagram Enrichment Pilot (Week 5 | Oct 28 – Nov 3)
 
-**Objective:** Validate the Instagram data enrichment process and refine targeting criteria before full-scale deployment.
+**Objective:** Identify and verify Instagram accounts for all scraped artist links, refining our matching criteria before full-scale deployment.
 
-**Setup:**
+**Outcome:**
 
-Two **Apify packages** were selected as the Instagram data source:
+We selected the [**Spotify Artist Link Scraper**](https://apify.com/scrapestorm/spotify-artist-monthly-listeners-contact-info-scraper) ($15/month base + per-run cost): Automatically retrieves artist Instagram links from Spotify artist pages.
 
-1. **Spotify Artist Link Scraper** ($15/month base + per-run cost): Automatically retrieves artist Instagram links from Spotify artist pages.
-   - **Initial Decision:** Purchase deemed cost-effective as a service wrapper over Spotify API data.
-   
-2. **Apify Instagram Artist Scraper** (Separate package; per-run cost ~$0.007/link): Extracts detailed Instagram profile metadata (follower count, bio, recent post activity, contact info).
+> **Note:** The Apify account used is linked to **PJ’s Gmail account**, and all billing and usage history is tied to that login.
 
-> **Note:** The Apify account used is linked to **PJ’s Gmail account**, and all billing and usage history are tied to that login.
-
-**Pilot Execution:**
-
-**Round 1 – Build Phase Optimization:**
-- **Initial Assessment:** Evaluated the $15/month Spotify API package for cost-benefit.
-- **Finding:** Determined that a **custom in-house algorithm** could replicate the same functionality (extracting Spotify artist URLs and links) at zero recurring cost.
-- **Decision:** Developed internal algorithm; cancelled the $15/month subscription.
-
-**Round 2 – Instagram Data Enrichment Pilot:**
+**Instagram Data Enrichment Pilot:**
 - **Test Cohort:** Selected first 5,000 artist URLs from the filtered dataset.
-- **Apify Run:** Executed Instagram scraper on the 5,000 URLs; cost ~$35 (5,000 links × ~$0.007/link).
+- **Apify Run:** Executed Instagram scraper on the 5,000 URLs; cost ~$35.
 - **Data Returned:** Received Instagram profile data for ~1,500 artists (30% yield; reflects inactive/deleted profiles or missing Instagram links).
 - **Segmentation:** Applied final filtering criteria:
   - **Geographic:** Artists with US-based Instagram location data.
@@ -192,12 +114,10 @@ The 30% yield rate (1,500 Instagram profiles from 5,000 URLs) is attributable to
 - Inactive or deleted Instagram accounts.
 - Incomplete or missing profile metadata.
 
-This validated the necessity of the Apify enrichment step; direct Spotify-only data was insufficient for outreach.
-
 **Deliverables:**
 - Pilot results CSV: 330 qualified artists with Instagram handles, follower counts, and Spotify data.
 - Apify configuration and rate-limit documentation.
-- Cost analysis and ROI projection for full-scale runs.
+- Cost analysis for full-scale runs.
 
 ---
 
@@ -268,11 +188,11 @@ artist community here: https://traditional-reason-961104.framer.app/artist-conta
 
 ---
 
-## 3. Technical Architecture & Deliverables
+## 3. Technical Architecture
 
 ### 3.1 SpotifyScraper Algorithm – Repository Overview
 
-**GitHub Repository:** [Handover to Client]
+[**GitHub Repository**](https://github.com/adrian0729/SpotifyScraper)
 
 **Project Structure:**
 
@@ -287,75 +207,9 @@ spotify-scraper/
 ├── README.md                     # Full technical documentation
 └── .gitignore                    # Git ignore rules
 ```
-
-**Core Scripts:**
-
-#### `discover_artists.py`
-- **Purpose:** Discovers and extracts Spotify artist profile URLs at scale using Playwright-driven Chromium workers.
-- **Inputs:** CLI flags (--count, --workers, --fresh, etc.)
-- **Outputs:** `urls.txt` (deduplicated artist URLs)
-- **Key Features:**
-  - Distributed, parallel crawling with configurable worker count.
-  - Resumable execution; tracks progress between runs.
-  - Automatic retry logic for transient network failures.
-  - Extensive logging for debugging and performance monitoring.
-
-**Example Usage:**
-```bash
-python discover_artists.py --count 100000 --workers 8 --fresh
-```
-
-#### `analyze_artists.py`
-- **Purpose:** Ingests raw Apify JSON exports and produces filtered, ranked artist contact lists and popularity CSVs.
-- **Inputs:** Single JSON file or directory of JSON files (from Apify exports).
-- **Outputs:**
-  - Console output: Filtered artist list with Instagram/email contacts and audience stats.
-  - `artist_popularity.csv`: Ranked, normalized popularity scores for all qualifying artists.
-- **Key Features:**
-  - Configurable audience thresholds (followers, monthly listeners).
-  - Geographic filtering (US-based artists).
-  - Contact extraction (Instagram handles, email, if available).
-  - Popularity scoring algorithm.
-
-**Example Usage:**
-```bash
-# Analyze single export
-python analyze_artists.py spotify_artist_info_1-500.json
-
-# Aggregate all JSON files in directory
-python analyze_artists.py "JSON Files"
-```
-
-### 3.2 Data Outputs & Handover Files
-
-**Files Delivered to Client:**
-
-1. **`urls.txt`** – Master list of 100,000 discovered Spotify artist profile URLs.
-   - Format: One URL per line.
-   - Use Case: Input for future Apify runs or artist discovery iterations.
-
-2. **`artist_popularity.csv`** – Filtered and ranked artist dataset.
-   - Columns: Artist Name, Spotify Profile URL, Instagram Handle, Instagram Followers, Spotify Monthly Listeners, Geographic Region, Popularity Score.
-   - Rows: 330 artists (after all filtering applied).
-   - Use Case: Artist outreach prioritization, database seeding, analytics.
-
-3. **`spotify-scraper` GitHub Repository** – Complete source code, documentation, and configuration.
-   - Includes: Both Python scripts, requirements.txt, comprehensive README, .gitignore.
-   - Use Case: In-house team can execute future artist discovery runs, modify parameters, or integrate into CI/CD pipelines.
-   - Maintenance: Future consultants or Jamtown engineers can fork/clone and maintain independently.
-
-4. **Apify Configuration Documentation** – Step-by-step guide for running Instagram enrichment scraper.
-   - Includes: Account setup, API key management, parameter settings, cost estimation, output handling.
-   - Use Case: Client can re-run Instagram enrichment on new artist URL batches as discovery scales.
-
-5. **Outreach Template & Campaign Guide** – Instagram DM template, Chrome extension setup instructions, rate-limit best practices, and trust-building recommendations.
-   - Use Case: Reproducible, scalable artist outreach process.
-
 ---
 
 ## 4. Integration with AI & Database Platform
-
-### 4.1 Data Flow to Framer Database & AI Workstream
 
 **Workflow:**
 
@@ -367,24 +221,6 @@ python analyze_artists.py "JSON Files"
    - Vectorizes artist preferences and bio data.
    - Creates embeddings for matching against nonprofit event opportunities.
    - Enables real-time artist-to-event matching.
-
-### 4.2 Data Schema Requirements
-
-**Artist Profile Fields (Captured via Framer Form & AOS Pipeline):**
-- Spotify Profile URL
-- Instagram Handle & Follower Count
-- Artist Name
-- Genre(s)
-- Bio / Artist Statement
-- Causes/Values Alignment (e.g., social justice, environmental, education)
-- Geographic Availability (willing to perform in which regions?)
-- Monthly Listeners (Spotify metric; used for audience size verification)
-- Contact Email (optional)
-
-**Data Quality Expectations:**
-- All mandatory fields populated before artist profile considered "active" in database.
-- Duplicate profiles flagged and merged.
-- Inactive accounts (no login in 90 days) marked for outreach re-engagement.
 
 ---
 
@@ -612,9 +448,10 @@ The handover of the `spotify-scraper` GitHub repository, Apify documentation, an
 
 While the automated outreach pipeline is highly **low-effort** and requires minimal ongoing maintenance, the practical outcomes showed a **very low success rate in generating genuine artist connections**. Only a small fraction of contacted artists responded or proceeded to the sign-up stage. Additionally, although inexpensive at small scale, the **Apify enrichment costs accumulate quickly** as the number of processed artist profiles grows, and should be monitored closely if future runs are performed.
 
-
 ---
 
 **Document Version:** 2.0  
 **Last Updated:** November 30, 2024  
 **Status:** **Complete**
+
+
