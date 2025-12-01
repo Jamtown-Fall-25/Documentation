@@ -331,58 +331,12 @@ As the outreach campaign progresses, the client should track:
 
 ## 7. Appendices
 
-### Appendix A: Technical Installation & Setup Guide
-
-**Environment Setup (Client/Future Engineers):**
-
-```bash
-# Clone repository
-git clone [spotify-scraper-repo-url] jamtown-spotify-scraper
-cd jamtown-spotify-scraper
-
-# Create Python virtual environment
-python3 -m venv .venv
-source .venv/bin/activate  # Windows: .venv\Scripts\activate
-
-# Install dependencies
-pip install --upgrade pip
-pip install -r requirements.txt
-
-# Install Playwright browser
-playwright install
-```
-
-**Running the Scraper:**
-
-```bash
-# Discover 100,000 artist URLs (first run)
-python discover_artists.py --count 100000 --fresh
-
-# Resume prior discovery run (append to existing urls.txt)
-python discover_artists.py --count 50000
-
-# Analyze Apify JSON exports and generate artist_popularity.csv
-python analyze_artists.py "JSON Files"
-```
-
-### Appendix B: Apify Configuration & Execution Steps
-
-1. **Create Apify Account** & subscribe to Instagram Artist Scraper actor.
-2. **Upload Artist URLs** – Paste Spotify artist profile URLs into Apify input (one per line).
-3. **Configure Scraper Parameters:**
-   - Extract: Instagram handle, follower count, bio, website, email (if available).
-   - Timeout: 30 seconds per profile.
-   - Proxy rotation: Enable to avoid Instagram rate-limits.
-4. **Execute Run** – Apify will scrape all profiles; cost ~$0.007 per profile.
-5. **Download JSON Export** – Save raw output to `JSON Files/` directory.
-6. **Run Analyzer** – Execute `python analyze_artists.py "JSON Files"` to filter and rank results.
-
-### Appendix C: Chrome Extension Outreach Campaign Setup
+### Appendix A: Chrome Extension Outreach Campaign Setup
 
 1. **Install Extension:** [Automated Instagram DM Bot - Chrome Web Store Link]
 2. **Load Message Template:**
    ```
-   Hi <Username>! I'm reaching out from Jamtown, where we connect artists
+   Hi! I'm reaching out from Jamtown, where we connect artists
    with nonprofits hosting events and performances. We can help you get matched
    with events that fit your genre and schedule, grow your reach by performing
    for new audiences, and handle all the logistics! Moreover, we will provide
@@ -394,45 +348,6 @@ python analyze_artists.py "JSON Files"
 4. **Load into Extension:** Paste usernames into extension input; set rate limit to 5–7 minutes between DMs.
 5. **Monitor:** Track outgoing DMs; pause if Instagram account receives warnings or elevated spam score.
 6. **Review Responses:** Check DM inbox daily for responses; log respondent data and conversation quality.
-
-### Appendix D: Data Schema & CSV Column Reference
-
-**artist_popularity.csv Columns:**
-
-| Column | Data Type | Description |
-| --- | --- | --- |
-| artist_name | String | Artist display name (from Spotify) |
-| spotify_url | String | Direct link to artist's Spotify profile |
-| instagram_handle | String | Artist's Instagram username (from Apify) |
-| instagram_followers | Integer | Instagram follower count (snapshot from enrichment run) |
-| spotify_monthly_listeners | Integer | Monthly listener count (from Spotify API) |
-| geographic_region | String | US state or region (inferred from profile location data) |
-| popularity_score | Float | Normalized popularity ranking (0–1); combines follower/listener metrics |
-| genre_primary | String | Primary music genre (from Spotify) |
-| genre_secondary | String | Secondary genres (from Spotify) |
-| contact_email | String | Email address if available (rare; often PR email) |
-| data_collection_date | Date | Date of Apify enrichment run (YYYY-MM-DD) |
-
-### Appendix E: Troubleshooting & Common Issues
-
-**Issue: `discover_artists.py` stalls or crashes**
-- **Solution:** Increase `--scroll-pause-ms` parameter (e.g., 500–1000ms) to reduce load on Spotify and avoid detection.
-- Check network connection and Spotify service status.
-- Reduce `--workers` count if local machine runs out of memory.
-
-**Issue: Apify Instagram scraper returns low yield (~20–30%)**
-- **Expected:** This yield rate is normal; many artists lack linked Instagram profiles or have inactive accounts.
-- **Solution:** Accept as baseline; focus on high-quality responses from the 30% matched profiles.
-
-**Issue: Chrome extension Instagram DM bot account flagged or suspended**
-- **Cause:** Excessive DM volume within short timeframe.
-- **Solution:** Increase rate-limit to 10–15 minutes between DMs; consider using multiple accounts in rotation.
-- **Prevention:** Never send > 500 DMs/day per account; space campaigns over 2+ weeks.
-
-**Issue: Artist responses indicating trust concerns or spam skepticism**
-- **Solution:** Prepare follow-up email template with company verification, social proof, and team credentials.
-- Include link to artist testimonials or press coverage on website.
-- Offer direct phone call or video chat to verify legitimacy.
 
 ---
 
@@ -453,5 +368,3 @@ While the automated outreach pipeline is highly **low-effort** and requires mini
 **Document Version:** 2.0  
 **Last Updated:** November 30, 2024  
 **Status:** **Complete**
-
-
