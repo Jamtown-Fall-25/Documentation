@@ -4,7 +4,7 @@
 **Project:** Jamtown Artist Outreach Automation Initiative  
 **Workstream:** Automated Outreach Strategy (AOS)  
 **Duration:** September 30, 2024 – December 1, 2024  
-**Status:** Ongoing (DM Phase, In Progress)
+**Status:** **Complete**
 
 ---
 
@@ -167,6 +167,8 @@ Two **Apify packages** were selected as the Instagram data source:
    - **Initial Decision:** Purchase deemed cost-effective as a service wrapper over Spotify API data.
    
 2. **Apify Instagram Artist Scraper** (Separate package; per-run cost ~$0.007/link): Extracts detailed Instagram profile metadata (follower count, bio, recent post activity, contact info).
+
+> **Note:** The Apify account used is linked to **PJ’s Gmail account**, and all billing and usage history are tied to that login.
 
 **Pilot Execution:**
 
@@ -606,8 +608,13 @@ The pipeline directly feeds the Jamtown database and AI matching workstream with
 
 The handover of the `spotify-scraper` GitHub repository, Apify documentation, and outreach campaign toolkit ensures the client can operate and scale this workstream independently, while maintaining the option to engage future consultants for optimization, platform integration, or broader ecosystem expansion.
 
+### Final Operational Note
+
+While the automated outreach pipeline is highly **low-effort** and requires minimal ongoing maintenance, the practical outcomes showed a **very low success rate in generating genuine artist connections**. Only a small fraction of contacted artists responded or proceeded to the sign-up stage. Additionally, although inexpensive at small scale, the **Apify enrichment costs accumulate quickly** as the number of processed artist profiles grows, and should be monitored closely if future runs are performed.
+
+
 ---
 
-**Document Version:** 1.0  
-**Last Updated:** November 16, 2024  
-**Status:** Final Deliverable
+**Document Version:** 2.0  
+**Last Updated:** November 30, 2024  
+**Status:** **Complete**
