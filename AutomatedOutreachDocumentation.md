@@ -1,4 +1,3 @@
-Automated Outreach Strategy Workstream
 ## Final Project Documentation
    
 **Project:** Jamtown Artist Outreach Automation Initiative  
