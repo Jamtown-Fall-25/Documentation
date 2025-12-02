@@ -261,6 +261,6 @@ While the automated outreach pipeline is definitely **low-effort** and requires 
 
 ---
 
-**Document Version:** 2.5
+**Document Version:** 2.5.  
 **Last Updated:** December 1st, 2024  
 **Status:** **Complete**
